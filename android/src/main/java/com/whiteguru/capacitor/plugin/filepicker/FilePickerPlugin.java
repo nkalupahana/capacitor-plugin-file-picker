@@ -46,14 +46,15 @@ public class FilePickerPlugin extends Plugin {
             supportedMimeTypes.add("*/*");
         }
 
-        String type = "";
-        for (String mime : supportedMimeTypes) {
-            type += mime + "|";
-        }
-        type = type.substring(0, type.length() - 1);
-
         chooseFile.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
-        chooseFile.setType(type);
+
+        if (supportedMimeTypes.size() == 1) {
+            chooseFile.setType(supportedMimeTypes.get(0));
+        } else {
+            chooseFile.setType("*/*");
+            chooseFile.putExtra(Intent.EXTRA_MIME_TYPES, supportedMimeTypes.toArray(new String[0]));
+        }
+
         chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
         chooseFile = Intent.createChooser(chooseFile, "");
         startActivityForResult(call, chooseFile, "pickFilesResult");
